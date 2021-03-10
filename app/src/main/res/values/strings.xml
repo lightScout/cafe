@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Cafe</string>
+    <string name="location_string">Latitude: %,.3f, Longitude: %,.3f</string>
+</resources>
