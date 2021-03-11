@@ -17,14 +17,14 @@ class CafeViewModel: ViewModel(){
     val cafeLiveData: MutableLiveData<List<Result>> = MutableLiveData()
     val sizeLiveData: MutableLiveData<Int> = MutableLiveData()
 
-    fun getCafeResult(latitude: String, longitude: String, radius: Int, type: String, keyword: String){
+    fun getCafeResult(location: String,){
 
-        cafeRetrofit.getCafeResult(latitude, longitude, radius, type, keyword)
-            .enqueue(object: Callback<CafeResult>{
+        cafeRetrofit.getNearByCafes(location)
+            .enqueue(object : Callback<CafeResult> {
                 override fun onResponse(call: Call<CafeResult>, response: Response<CafeResult>) {
                     response.body()?.let {
-                            cafeLiveData.value = it.results
-                            sizeLiveData.value = it.results.size
+                        cafeLiveData.value=it.results
+
                     } ?: Log.d("TAG_X", "response null ${call.request().url()}")
                 }
 

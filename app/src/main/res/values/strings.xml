@@ -3,4 +3,8 @@
     <string name="location_string">Latitude: %,.3f, Longitude: %,.3f</string>
     <string name="pager_text">%s</string>
     <string name="business_name_text">%s</string>
+    <string name="business_operational_text">%s</string>
+    <string name="business_open_text">%s</string>
+    <string name="business_rating_text">%s</string>
+    <string name="business_type_text">Type</string>
 </resources>

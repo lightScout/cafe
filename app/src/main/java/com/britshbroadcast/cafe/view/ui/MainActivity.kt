@@ -8,15 +8,25 @@ import android.location.LocationListener
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.britshbroadcast.cafe.R
 import com.britshbroadcast.cafe.databinding.ActivityMainBinding
+import com.britshbroadcast.cafe.view.adapter.CafeItemAdapter
+import com.britshbroadcast.cafe.viewmodel.CafeViewModel
 
 class MainActivity : AppCompatActivity(), LocationListener {
 
     private val REQUEST_CODE = 222
 
     private lateinit var  locationManager: LocationManager
+
+    private val cafeViewModel by viewModels<CafeViewModel>()
+
+    private val cafeItemAdapter = CafeItemAdapter(mutableListOf())
 
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +35,8 @@ class MainActivity : AppCompatActivity(), LocationListener {
         setContentView(binding.root)
 
         locationManager =  getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        binding.mainRecyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        binding.mainRecyclerView.adapter = cafeItemAdapter
 
 
     }
@@ -80,8 +92,21 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     override fun onLocationChanged(location: Location) {
-        binding.locationTextView.text = getString(R.string.location_string, location.latitude, location.longitude)
 
+
+
+//        cafeViewModel.cafeLiveData.observe(this, Observer { it ->
+//            it.forEach {
+//                Log.d("TAGJ", it.name)
+//            }
+//
+////            if(it !=null){
+////                binding.pagerTextView.text = getString(R.string.pager_text, it.size.toString())
+////                cafeItemAdapter.updateDate(it)
+////            }
+//        })
+
+      cafeViewModel.getCafeResult("${location.latitude},${location.longitude}")
     }
 
 }
