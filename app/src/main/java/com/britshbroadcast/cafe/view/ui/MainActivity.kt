@@ -7,6 +7,7 @@ import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -120,6 +121,7 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
             binding.pagerTextView.text=getString(R.string.pager_text, it.size.toString())
             cafeItemAdapter.updateDate(it)
+            binding.loadingTexView.visibility = View.GONE
 
         })
 
