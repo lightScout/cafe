@@ -6,13 +6,14 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.SnapHelper
 import com.britshbroadcast.cafe.R
 import com.britshbroadcast.cafe.databinding.ActivityMainBinding
 import com.britshbroadcast.cafe.view.adapter.CafeItemAdapter
@@ -35,7 +36,13 @@ class MainActivity : AppCompatActivity(), LocationListener {
         setContentView(binding.root)
 
         locationManager =  getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        binding.mainRecyclerView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        val snapHelper: SnapHelper=LinearSnapHelper()
+        snapHelper.attachToRecyclerView(binding.mainRecyclerView)
+        binding.mainRecyclerView.layoutManager = LinearLayoutManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
         binding.mainRecyclerView.adapter = cafeItemAdapter
 
 
@@ -48,7 +55,10 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun checkPermission() {
-        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if(ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED){
             registerLocationListener()
     }else{
             requestPermission()
@@ -56,10 +66,18 @@ class MainActivity : AppCompatActivity(), LocationListener {
     }
 
     private fun requestPermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+            REQUEST_CODE
+        )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == REQUEST_CODE && permissions[0] == android.Manifest.permission.ACCESS_FINE_LOCATION) {
@@ -68,7 +86,10 @@ class MainActivity : AppCompatActivity(), LocationListener {
                     registerLocationListener()
 
         } else {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                )) {
                 requestPermission()
             } else {
                     // showOverlay()
@@ -83,10 +104,10 @@ class MainActivity : AppCompatActivity(), LocationListener {
     @SuppressLint("MissingPermission")
     private fun registerLocationListener() {
         locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                2000L,
-                0f,
-                this
+            LocationManager.NETWORK_PROVIDER,
+            2000L,
+            0f,
+            this
         )
 
     }
@@ -95,16 +116,12 @@ class MainActivity : AppCompatActivity(), LocationListener {
 
 
 
-//        cafeViewModel.cafeLiveData.observe(this, Observer { it ->
-//            it.forEach {
-//                Log.d("TAGJ", it.name)
-//            }
-//
-////            if(it !=null){
-////                binding.pagerTextView.text = getString(R.string.pager_text, it.size.toString())
-////                cafeItemAdapter.updateDate(it)
-////            }
-//        })
+        cafeViewModel.cafeLiveData.observe(this, Observer { it ->
+
+            binding.pagerTextView.text=getString(R.string.pager_text, it.size.toString())
+            cafeItemAdapter.updateDate(it)
+
+        })
 
       cafeViewModel.getCafeResult("${location.latitude},${location.longitude}")
     }
